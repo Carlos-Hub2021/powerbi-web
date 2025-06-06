@@ -1,0 +1,28 @@
+<script setup>
+
+</script>
+
+<template>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/Style.css">
+    <title>Reportr de PowerBi</title>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Reportr de PowerBi</h1>
+        <p>Visualizacion interactiva de datos generar de Power BI</p>
+        <div class="iframe-container">
+            <p>ass</p>
+
+        </div>
+    </div>
+</body>
+</html>
+ 
+</template>
+
