@@ -1,98 +1,101 @@
-<script setup>
-
-</script>
-
 <template>
-  <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/Style.css">
-    <title>Reportr de PowerBi</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
-      margin: 0;
-      overflow: hidden;
-    }
+  <div class="container">
+    <h1 class="titulo" @mouseenter="hover = true" @mouseleave="hover = false" @touchstart="hover = true"
+      @touchend="hover = false" :class="{ active: hover }">
+      📊 Reporte de Power BI 🚀
+    </h1>
+    <p class="subtitulo">
+      ✨ Visualización interactiva de datos generada en Power BI 🔍
+    </p>
 
-    #juego {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-    }
-
-    #circulo {
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background-color: red;
-      cursor: pointer;
-    }
-
-    #contador {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      font-size: 24px;
-      background: white;
-      padding: 10px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px #ccc;
-    }
-  </style>
-
-</head>
-<body>
-
-    <div class="container">
-        <h1>Reportr de PowerBi</h1>
-        <p>Visualizacion interactiva de datos generar de Power BI</p>
-        <div class="iframe-container">
-          
-
-
-          
-  <div id="juego">
-    <div id="contador">Puntos: 0</div>
-    <div id="circulo"></div>
-  </div>
-
-  <script>
-    const circulo = document.getElementById("circulo");
-    const contador = document.getElementById("contador");
-    let puntos = 0;
-
-    function moverCirculo() {
-      const maxX = window.innerWidth - 60;
-      const maxY = window.innerHeight - 60;
-      const x = Math.random() * maxX;
-      const y = Math.random() * maxY;
-
-      circulo.style.left = x + "px";
-      circulo.style.top = y + "px";
-    }
-
-    circulo.addEventListener("click", () => {
-      puntos++;
-      contador.textContent = "Puntos: " + puntos;
-      moverCirculo();
-    });
-
-    // Mover el círculo la primera vez
-    moverCirculo();
-  </script>
-
-
-
-
-        </div>
+    <div class="iframe-container">
+      <iframe title="visualizacionDaatamartN" width="1140" height="541.25"
+        src="https://app.powerbi.com/reportEmbed?reportId=f8b75f38-2df9-4c21-8233-a50db50b5aca&autoAuth=true&ctid=c2677f10-7216-4412-8262-de0b610ace4c"
+        frameborder="0" allowFullScreen="true"></iframe>
+        <br>
     </div>
-</body>
-</html>
- 
+<br>
+    <div class="minesweeper-container">
+      <h2>🎯 Juego de Buscaminas</h2>
+      <div id="minesweeper"></div>
+    </div>
+  </div>
 </template>
 
+<script>
+export default {
+  data() {
+    return {
+      hover: false,
+    };
+  },
+  mounted() {
+    this.initMinesweeper();
+  },
+  methods: {
+    initMinesweeper() {
+      const size = 8;
+      const mines = 10;
+      const grid = [];
+      const container = document.getElementById("minesweeper");
+      container.innerHTML = "";
+      container.style.display = "grid";
+      container.style.gridTemplateColumns = `repeat(${size}, 30px)`;
+      container.style.gap = "4px";
+      const minePositions = new Set();
+      while (minePositions.size < mines) {
+        minePositions.add(Math.floor(Math.random() * size * size));
+      }
+
+      for (let i = 0; i < size * size; i++) {
+        const cell = document.createElement("div");
+        cell.classList.add("cell");
+        cell.dataset.index = i;
+        cell.style.width = "30px";
+        cell.style.height = "30px";
+        cell.style.background = "#ddd";
+        cell.style.display = "flex";
+        cell.style.alignItems = "center";
+        cell.style.justifyContent = "center";
+        cell.style.cursor = "pointer";
+        cell.style.fontWeight = "bold";
+        grid.push(cell);
+        container.appendChild(cell);
+      }
+
+      grid.forEach((cell, i) => {
+        cell.addEventListener("click", () => {
+          if (minePositions.has(i)) {
+            cell.innerText = "💣";
+            cell.style.background = "#f44336";
+            alert("¡Boom! Perdiste.");
+          } else {
+            const nearby = countNearbyMines(i);
+            cell.innerText = nearby || "";
+            cell.style.background = "#a5d6a7";
+            cell.style.pointerEvents = "none";
+          }
+        });
+      });
+
+      function countNearbyMines(index) {
+        const neighbors = [
+          -1, 1, -size, size, -size - 1, -size + 1, size - 1, size + 1,
+        ];
+        return neighbors.reduce((acc, offset) => {
+          const nIndex = index + offset;
+          if (
+            nIndex >= 0 &&
+            nIndex < size * size &&
+            Math.abs((index % size) - (nIndex % size)) <= 1 &&
+            minePositions.has(nIndex)
+          ) {
+            acc++;
+          }
+          return acc;
+        }, 0);
+      }
+    },
+  },
+};
+</script>
